@@ -1,6 +1,7 @@
 # Dependências e build local
 node_modules/
 .next/
+.next-export/
 *.tsbuildinfo
 
 # Configuração local do Claude Code

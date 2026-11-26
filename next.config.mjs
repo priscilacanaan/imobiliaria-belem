@@ -8,6 +8,8 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Build estático em pasta própria: dá para gerar o out/ com o npm run dev ligado.
+  distDir: isStatic ? ".next-export" : ".next",
   images: {
     unoptimized: isStatic,
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],

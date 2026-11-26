@@ -1,5 +1,6 @@
 "use client";
 
+import { CircleUserRound } from "lucide-react";
 import { useSiteSettings } from "@/lib/team";
 import { pageHref } from "@/lib/paths";
 
@@ -19,12 +20,20 @@ export function Header() {
           <a href={pageHref("/")} className="font-display text-lg text-ink-900">
             {siteSettings.brandName}
           </a>
-          <nav aria-label="Principal" className="flex items-center gap-6 sm:gap-8">
+          <nav aria-label="Principal" className="flex items-center gap-3 sm:gap-6">
             {links.map((l) => (
               <a key={l.href} href={l.href} className="text-sm text-ink-700 transition hover:text-ink-900">
                 {l.label}
               </a>
             ))}
+            {/* Acesso da equipe ao painel */}
+            <a
+              href={pageHref("/admin/login")}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-sand-200 bg-paper-raised px-4 text-sm font-medium text-ink-900 transition hover:border-ink-500"
+            >
+              <CircleUserRound className="size-4" />
+              Entrar
+            </a>
             <a
               href={`https://wa.me/${siteSettings.whatsapp}`}
               target="_blank"

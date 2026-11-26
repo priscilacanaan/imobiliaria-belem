@@ -5,6 +5,7 @@
 // Uso: npm run build:githack
 // Variáveis opcionais: GITHUB_USER, GITHUB_REPO (padrão imobiliaria-belem), GITHUB_BRANCH (padrão main)
 import { execSync } from "node:child_process";
+import fs from "node:fs";
 
 const user = process.env.GITHUB_USER || execSync("gh api user -q .login").toString().trim();
 const repo = process.env.GITHUB_REPO || "imobiliaria-belem";
@@ -16,4 +17,9 @@ execSync("npx next build", {
   stdio: "inherit",
   env: { ...process.env, NEXT_PUBLIC_STATIC_EXPORT: "1", NEXT_PUBLIC_BASE_PATH: basePath },
 });
+
+// O build estático usa a pasta .next-export (ver next.config.mjs); o site vai para out/.
+fs.rmSync("out", { recursive: true, force: true });
+fs.renameSync(".next-export", "out");
+
 console.log(`\nPronto. Depois do push, abra: https://raw.githack.com${basePath}/index.html`);
