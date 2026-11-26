@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Pencil, Plus, RotateCcw, Search, Star, Trash2 } from "lucide-react";
 import { AdminShell, Toast, useToast } from "@/components/admin/AdminShell";
+import { can } from "@/content/admin";
 import { photoUrl } from "@/content/images";
 import { statusLabels, type PropertyStatus } from "@/content/seed";
 import { formatPrice } from "@/lib/format";
@@ -178,6 +179,7 @@ export default function AdminHome() {
                       <span className="sr-only">Editar</span>
                     </a>
 
+                    {can(session.role, "imoveis.excluir") && (
                     <button
                       type="button"
                       onClick={() => {
@@ -192,6 +194,7 @@ export default function AdminHome() {
                       <Trash2 className="size-4" />
                       <span className="sr-only">Excluir</span>
                     </button>
+                    )}
                   </div>
                 </li>
               );

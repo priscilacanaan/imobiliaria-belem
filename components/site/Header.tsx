@@ -1,10 +1,13 @@
-import { siteSettings } from "@/content/seed";
+"use client";
+
+import { useSiteSettings } from "@/lib/team";
 import { pageHref } from "@/lib/paths";
 
 // Sobre e Contato entram aqui quando as páginas existirem.
 const links = [{ href: pageHref("/imoveis"), label: "Imóveis" }];
 
 export function Header() {
+  const { settings: siteSettings } = useSiteSettings();
   return (
     <>
       {/* Aviso de demonstração: o site é público, mas os dados são fictícios */}

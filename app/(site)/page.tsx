@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { ButtonLink } from "@/components/ui/Button";
+import { ButtonLink, buttonClass } from "@/components/ui/Button";
+import { WhatsAppLink } from "@/components/site/WhatsAppLink";
 import { photoUrl } from "@/content/images";
 import { pageHref } from "@/lib/paths";
 import { FeaturedProperties } from "@/components/site/FeaturedProperties";
 import { SearchForm } from "@/components/site/SearchForm";
-import { siteSettings } from "@/content/seed";
 
 const stats = [
   { value: "10+", label: "anos de mercado" },
@@ -58,15 +58,9 @@ export default function HomePage() {
             <ButtonLink href="#destaques" variant="ghost" className="text-white hover:bg-white/10">
               Ver imóveis em destaque
             </ButtonLink>
-            <ButtonLink
-              href={`https://wa.me/${siteSettings.whatsapp}?text=${encodeURIComponent("Olá! Quero vender meu imóvel.")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="ghost"
-              className="text-white hover:bg-white/10"
-            >
+            <WhatsAppLink text="Olá! Quero vender meu imóvel." className={buttonClass("ghost", "text-white hover:bg-white/10")}>
               Quero vender meu imóvel
-            </ButtonLink>
+            </WhatsAppLink>
           </div>
 
           <dl className="mt-16 grid grid-cols-2 gap-8 border-t border-white/10 pt-8 md:grid-cols-4">

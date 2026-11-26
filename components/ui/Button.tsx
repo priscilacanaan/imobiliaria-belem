@@ -11,6 +11,11 @@ const variants: Record<Variant, string> = {
   ghost: "text-ink-700 hover:bg-sand-100",
 };
 
+/** Classes de botão para usar em outros elementos (ex.: links especiais). */
+export function buttonClass(variant: Variant = "primary", className = ""): string {
+  return `${base} ${variants[variant]} ${className}`;
+}
+
 type Props = {
   variant?: Variant;
   className?: string;

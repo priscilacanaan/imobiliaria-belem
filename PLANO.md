@@ -4,6 +4,8 @@
 >
 > **Área do corretor (demo):** login em `/admin/login` e painel em `/admin` (lista com busca, filtros por situação, destaque e situação com 1 clique, excluir) e `/admin/imovel` (cadastro/edição com prévia ao vivo, Ctrl+S salva). Modo demonstração: contas em `content/admin.ts` e alterações guardadas no navegador de quem usa (`lib/store.ts`, `lib/auth.ts`). Não é segurança de verdade. Próximo passo: trocar por Supabase (Auth + banco), mantendo as mesmas telas.
 >
+> **Papéis:** Superadmin (tudo, inclusive Equipe em `/admin/equipe` e Configurações do site em `/admin/configuracoes`), Gestor (imóveis, inclusive excluir) e Corretor (cadastrar e editar). Permissões em `content/admin.ts` (`can()`).
+>
 > **Publicação (demo):** versão estática no raw.githack, a partir da pasta `out/` de um repositório público no GitHub (`imobiliaria-belem`). Para atualizar: `npm run build:githack`, depois commit e push. Faixa "Site de demonstração" no topo, porque os dados são fictícios. Links internos usam `pageHref()` (`lib/paths.ts`) para funcionar no raw.githack.
 >
 > **Decisões tomadas por padrão (ajustáveis):**

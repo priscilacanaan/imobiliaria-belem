@@ -1,22 +1,34 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { ExternalLink, LayoutGrid, LogOut, Plus } from "lucide-react";
-import { siteSettings } from "@/content/seed";
+import { ExternalLink, LayoutGrid, LogOut, Plus, Settings, ShieldCheck, Users } from "lucide-react";
+import { can, type Permission } from "@/content/admin";
+import { useSiteSettings } from "@/lib/team";
 import { getSession, signOut, type Session } from "@/lib/auth";
 import { pageHref } from "@/lib/paths";
 
-type NavKey = "painel" | "novo";
+type NavKey = "painel" | "novo" | "equipe" | "configuracoes";
 
 /** Moldura do painel: confere a sessão, mostra o menu e o conteúdo. */
-export function AdminShell({ active, children }: { active?: NavKey; children: (session: Session) => ReactNode }) {
+export function AdminShell({
+  active,
+  requires,
+  children,
+}: {
+  active?: NavKey;
+  /** Permissão exigida para ver a página (ex.: "equipe"). Sem ela, volta para a lista. */
+  requires?: Permission;
+  children: (session: Session) => ReactNode;
+}) {
   const [session, setSession] = useState<Session | null>(null);
+  const { settings: siteSettings } = useSiteSettings();
 
   useEffect(() => {
     const s = getSession();
     if (!s) window.location.replace(pageHref("/admin/login"));
+    else if (requires && !can(s.role, requires)) window.location.replace(pageHref("/admin"));
     else setSession(s);
-  }, []);
+  }, [requires]);
 
   if (!session) {
     return <div className="grid min-h-screen place-items-center text-sm text-ink-500">Carregando painel…</div>;
@@ -25,7 +37,14 @@ export function AdminShell({ active, children }: { active?: NavKey; children: (s
   const nav = [
     { key: "painel" as const, href: pageHref("/admin"), label: "Imóveis", icon: LayoutGrid },
     { key: "novo" as const, href: pageHref("/admin/imovel"), label: "Novo imóvel", icon: Plus },
+    ...(can(session.role, "equipe")
+      ? [{ key: "equipe" as const, href: pageHref("/admin/equipe"), label: "Equipe", icon: Users }]
+      : []),
+    ...(can(session.role, "configuracoes")
+      ? [{ key: "configuracoes" as const, href: pageHref("/admin/configuracoes"), label: "Configurações", icon: Settings }]
+      : []),
   ];
+  const isSuper = session.role === "Superadmin";
 
   function handleSignOut() {
     signOut();
@@ -36,10 +55,10 @@ export function AdminShell({ active, children }: { active?: NavKey; children: (s
     <div className="min-h-screen lg:grid lg:grid-cols-[248px_1fr]">
       {/* Menu lateral (desktop) / barra superior (celular) */}
       <aside className="sticky top-0 z-30 flex items-center justify-between gap-4 bg-night-900 px-4 py-3 text-white lg:h-screen lg:flex-col lg:items-stretch lg:justify-start lg:px-5 lg:py-8">
-        <a href={pageHref("/admin")} className="font-display text-lg leading-tight">
+        <a href={pageHref("/admin")} className="font-display shrink-0 whitespace-nowrap text-lg leading-tight">
           {siteSettings.brandName}
           <span className="hidden text-xs font-sans uppercase tracking-[0.16em] text-accent-300 lg:block">
-            Painel do corretor
+            {isSuper ? "Superadmin" : "Painel do corretor"}
           </span>
         </a>
 
@@ -49,22 +68,26 @@ export function AdminShell({ active, children }: { active?: NavKey; children: (s
               key={key}
               href={href}
               aria-current={active === key ? "page" : undefined}
+              aria-label={label}
+              title={label}
               className={`inline-flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2.5 text-sm transition ${
                 active === key ? "bg-white/10 text-white" : "text-white/65 hover:bg-white/5 hover:text-white"
               }`}
             >
               <Icon className="size-4" />
-              <span className="hidden sm:inline">{label}</span>
+              <span className="hidden whitespace-nowrap lg:inline">{label}</span>
             </a>
           ))}
           <a
             href={pageHref("/")}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Ver site"
+            title="Ver site"
             className="inline-flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2.5 text-sm text-white/65 transition hover:bg-white/5 hover:text-white"
           >
             <ExternalLink className="size-4" />
-            <span className="hidden sm:inline">Ver site</span>
+            <span className="hidden whitespace-nowrap lg:inline">Ver site</span>
           </a>
         </nav>
 
@@ -74,7 +97,10 @@ export function AdminShell({ active, children }: { active?: NavKey; children: (s
           </span>
           <div className="hidden min-w-0 flex-1 lg:block">
             <p className="truncate text-sm">{session.name}</p>
-            <p className="truncate text-xs text-white/50">{session.role}</p>
+            <p className="flex items-center gap-1 truncate text-xs text-white/50">
+              {isSuper && <ShieldCheck className="size-3 text-accent-300" />}
+              {session.role}
+            </p>
           </div>
           <button
             type="button"

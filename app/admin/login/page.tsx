@@ -5,11 +5,12 @@ import Image from "next/image";
 import { Eye, EyeOff, Loader2, LockKeyhole, Sparkles } from "lucide-react";
 import { demoAccess } from "@/content/admin";
 import { photoUrl } from "@/content/images";
-import { siteSettings } from "@/content/seed";
+import { useSiteSettings } from "@/lib/team";
 import { getSession, signIn } from "@/lib/auth";
 import { pageHref } from "@/lib/paths";
 
 export default function LoginPage() {
+  const { settings: siteSettings } = useSiteSettings();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
@@ -28,19 +29,19 @@ export default function LoginPage() {
     setLoading(true);
     // Pequena pausa para o feedback de "entrando" ser percebido.
     setTimeout(() => {
-      const session = signIn(email, password, remember);
-      if (session) {
+      const result = signIn(email, password, remember);
+      if ("session" in result) {
         window.location.href = pageHref("/admin");
       } else {
         setLoading(false);
-        setError("E-mail ou senha incorretos. Confira e tente de novo.");
+        setError(result.error);
       }
     }, 450);
   }
 
-  function useDemoAccess() {
-    setEmail(demoAccess.email);
-    setPassword(demoAccess.password);
+  function fillDemo(kind: keyof typeof demoAccess) {
+    setEmail(demoAccess[kind].email);
+    setPassword(demoAccess[kind].password);
     setError("");
   }
 
@@ -146,13 +147,22 @@ export default function LoginPage() {
             <p className="mt-1 text-sm text-ink-700">
               Este é um site de demonstração. As alterações ficam salvas só neste navegador.
             </p>
-            <button
-              type="button"
-              onClick={useDemoAccess}
-              className="mt-3 text-sm font-semibold text-brand-500 hover:text-brand-600"
-            >
-              Usar acesso de demonstração →
-            </button>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => fillDemo("Superadmin")}
+                className="rounded-full bg-night-900 px-4 py-2 text-xs font-semibold text-white hover:bg-night-800"
+              >
+                Entrar como Superadmin
+              </button>
+              <button
+                type="button"
+                onClick={() => fillDemo("Corretor")}
+                className="rounded-full border border-sand-200 bg-paper-raised px-4 py-2 text-xs font-semibold text-ink-900 hover:bg-sand-100"
+              >
+                Entrar como Corretor
+              </button>
+            </div>
           </div>
         </div>
       </section>

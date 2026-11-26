@@ -1,6 +1,9 @@
-import { siteSettings } from "@/content/seed";
+"use client";
+
+import { useSiteSettings } from "@/lib/team";
 
 export function Footer() {
+  const { settings: siteSettings } = useSiteSettings();
   return (
     <footer className="mt-24 border-t border-sand-200 bg-sand-100">
       <div className="container-site flex flex-col gap-6 py-12 md:flex-row md:items-end md:justify-between">

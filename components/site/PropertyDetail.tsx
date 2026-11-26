@@ -5,7 +5,8 @@ import { Bath, BedDouble, Car, Check, MapPin, MessageCircle, Ruler } from "lucid
 import { LeadForm } from "@/components/site/LeadForm";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { photoUrl } from "@/content/images";
-import { isPublished, similarProperties, siteSettings, type Property } from "@/content/seed";
+import { isPublished, similarProperties, type Property } from "@/content/seed";
+import { useSiteSettings } from "@/lib/team";
 import { formatArea, formatPrice } from "@/lib/format";
 import { pageHref } from "@/lib/paths";
 import { useProperties } from "@/lib/store";
@@ -36,6 +37,7 @@ export function PropertyDetailLive({ id, fallback }: { id: string; fallback?: Pr
 }
 
 function PropertyDetail({ property, list }: { property: Property; list: Property[] }) {
+  const { settings: siteSettings } = useSiteSettings();
   const isRent = property.purpose === "aluguel";
   const similar = similarProperties(property, list);
   const whatsappText = `Olá! Tenho interesse no imóvel ${property.code} (${property.title}).`;
