@@ -2,6 +2,7 @@
 node_modules/
 .next/
 .next-export/
+.static-anterior/
 *.tsbuildinfo
 
 # Configuração local do Claude Code
