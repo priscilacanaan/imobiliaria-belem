@@ -12,6 +12,17 @@ export const photos = {
 
 export type PhotoKey = keyof typeof photos;
 
+/** Nome legível de cada foto (usado no seletor do painel). */
+export const photoLabels: Record<PhotoKey, string> = {
+  casaPiscina: "Casa branca com piscina",
+  terracoPorDoSol: "Terraço com piscina ao entardecer",
+  casaArquitetura: "Casa escura com jardim",
+  mansao: "Casa de dois andares com piscina",
+  coberturaLiving: "Living com pé-direito duplo",
+  apartamentoLiving: "Living contemporâneo",
+  apartamentoMadeira: "Sala com madeira e luz natural",
+};
+
 export function photoUrl(key: PhotoKey, width = 1600): string {
   return `https://images.unsplash.com/photo-${photos[key]}?auto=format&fit=crop&w=${width}&q=80`;
 }

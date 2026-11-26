@@ -3,18 +3,21 @@
 import { useSearchParams } from "next/navigation";
 import { PropertyCard } from "@/components/site/PropertyCard";
 import { SearchForm } from "@/components/site/SearchForm";
-import { properties } from "@/content/seed";
+import { isPublished } from "@/content/seed";
+import { useProperties } from "@/lib/store";
 import { pageHref } from "@/lib/paths";
 
 /** Lê os filtros da URL e filtra no navegador (funciona em hospedagem estática). */
 export function PropertyResults() {
   const params = useSearchParams();
+  const { properties } = useProperties();
   const purpose = params.get("purpose") ?? undefined;
   const type = params.get("type") ?? undefined;
   const cidade = params.get("cidade") ?? undefined;
   const bairro = params.get("bairro") ?? undefined;
 
   const results = properties.filter((p) => {
+    if (!isPublished(p)) return false;
     if (purpose && p.purpose !== purpose) return false;
     if (type && p.type !== type) return false;
     if (cidade && p.city !== cidade) return false;

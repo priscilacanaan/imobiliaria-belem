@@ -1,9 +1,16 @@
 import Image from "next/image";
 import { pageHref } from "@/lib/paths";
 import { BedDouble, Bath, Car, Ruler } from "lucide-react";
-import type { Property } from "@/content/seed";
+import { properties as seedProperties, type Property } from "@/content/seed";
 import { photoUrl } from "@/content/images";
 import { formatArea, formatPrice } from "@/lib/format";
+
+// Imóveis de exemplo têm página estática própria; os cadastrados no painel abrem em /imoveis/ver?id=.
+const staticSlugs = new Set(seedProperties.map((p) => p.slug));
+
+export function propertyHref(p: Property): string {
+  return staticSlugs.has(p.slug) ? pageHref(`/imoveis/${p.slug}`) : pageHref("/imoveis/ver", { id: p.id });
+}
 
 export function PropertyCard({ property, priority = false }: { property: Property; priority?: boolean }) {
   const isRent = property.purpose === "aluguel";
@@ -36,7 +43,7 @@ export function PropertyCard({ property, priority = false }: { property: Propert
           <h3 className="font-display mt-1 text-lg leading-snug text-ink-900">
             {/* O link cobre o card inteiro (::after), mantendo um único alvo de foco */}
             <a
-              href={pageHref(`/imoveis/${property.slug}`)}
+              href={propertyHref(property)}
               className="after:absolute after:inset-0 after:rounded-[var(--radius-card)] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-brand-500"
             >
               {property.title}

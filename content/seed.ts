@@ -4,6 +4,14 @@ import type { PhotoKey } from "./images";
 
 export type { PropertyType };
 export type Purpose = "venda" | "aluguel";
+export type PropertyStatus = "ativo" | "pausado" | "vendido" | "alugado";
+
+export const statusLabels: Record<PropertyStatus, string> = {
+  ativo: "Ativo no site",
+  pausado: "Pausado",
+  vendido: "Vendido",
+  alugado: "Alugado",
+};
 
 export type Property = {
   id: string;
@@ -20,6 +28,8 @@ export type Property = {
   bathrooms: number;
   parking: number;
   highlight?: boolean;
+  /** Só imóveis "ativo" aparecem no site. Padrão: ativo. */
+  status?: PropertyStatus;
   tags: string[];
   photo: PhotoKey;
   /** Código interno exibido ao cliente (ex.: "IB-1001"). */
@@ -31,11 +41,15 @@ export function findProperty(slug: string): Property | undefined {
   return properties.find((p) => p.slug === slug);
 }
 
+export function isPublished(p: Property): boolean {
+  return (p.status ?? "ativo") === "ativo";
+}
+
 /** Parecidos: mesma finalidade, priorizando mesmo tipo e mesma cidade. */
-export function similarProperties(base: Property, limit = 3): Property[] {
+export function similarProperties(base: Property, list: Property[] = properties, limit = 3): Property[] {
   const score = (p: Property) => (p.type === base.type ? 2 : 0) + (p.city === base.city ? 1 : 0);
-  return properties
-    .filter((p) => p.id !== base.id && p.purpose === base.purpose)
+  return list
+    .filter((p) => p.id !== base.id && p.purpose === base.purpose && isPublished(p))
     .sort((a, b) => score(b) - score(a))
     .slice(0, limit);
 }
