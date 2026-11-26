@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS — fonte única de verdade do visual.
+   Trocar a marca = trocar os valores abaixo.
+   ============================================================ */
+@theme {
+  /* Cores de marca */
+  --color-brand-50: #eef5f2;
+  --color-brand-100: #d5e7e0;
+  --color-brand-500: #1f5a4c;
+  --color-brand-600: #184a3f;
+  --color-brand-700: #123a32;
+
+  /* Acento dourado (destaques, itálico da hero, CTA premium) */
+  --color-accent-300: #e3c88f;
+  --color-accent-400: #c9a35b;
+  --color-accent-500: #a8843f;
+
+  /* Noite (hero e blocos escuros) */
+  --color-night-800: #1a2320;
+  --color-night-900: #0f1513;
+
+  /* Neutras quentes (papel e tinta) */
+  --color-paper: #f7f5f0;
+  --color-paper-raised: #ffffff;
+  --color-sand-100: #efebe2;
+  --color-sand-200: #e2dccf;
+  --color-ink-500: #6b665c;
+  --color-ink-700: #3a3730;
+  --color-ink-900: #1c1b19;
+
+  /* Estados */
+  --color-success: #2f7a4f;
+  --color-danger: #b03a2e;
+
+  /* Tipografia */
+  --font-sans: ui-sans-serif, "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+
+  /* Raios e sombras */
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
+  --shadow-soft: 0 1px 2px rgb(28 27 25 / 0.06), 0 8px 24px -12px rgb(28 27 25 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(28 27 25 / 0.06), 0 24px 48px -20px rgb(28 27 25 / 0.28);
+
+  /* Movimento */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink-900);
+    font-family: var(--font-sans);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  .container-site {
+    width: min(100% - 2rem, 80rem);
+    margin-inline: auto;
+  }
+}

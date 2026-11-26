@@ -1,0 +1,12 @@
+# Dependências e build local
+node_modules/
+.next/
+*.tsbuildinfo
+
+# Configuração local do Claude Code
+.claude/
+
+# Ambiente
+.env*
+
+# A pasta out/ É versionada de propósito: o raw.githack serve o site a partir dela.
